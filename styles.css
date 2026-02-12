@@ -491,3 +491,33 @@ body {
 .csv-table tbody tr:hover {
   background-color: var(--button-hover);
 }
+
+/* JSON Viewer Styles */
+.json-container {
+  padding: 32px 24px;
+  max-width: 980px;
+  margin: 0;
+}
+
+.json-container pre {
+  padding: 20px;
+  overflow: auto;
+  font-size: 14px;
+  line-height: 1.6;
+  background-color: var(--pre-bg);
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  margin: 0;
+}
+
+.json-container code {
+  display: block;
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  color: var(--text-primary);
+  background: transparent;
+  padding: 0;
+}
+
+.json-container .code-block-wrapper {
+  margin: 0;
+}

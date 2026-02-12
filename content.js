@@ -2,11 +2,12 @@
 function initViewer() {
   const url = window.location.href;
 
-  // Check if this is a markdown or CSV file by URL
+  // Check if this is a markdown, CSV, or JSON file by URL
   const isMarkdown = url.match(/\.(md|markdown)$/i);
   const isCsv = url.match(/\.csv$/i);
+  const isJson = url.match(/\.json$/i);
 
-  if (!isMarkdown && !isCsv) {
+  if (!isMarkdown && !isCsv && !isJson) {
     return;
   }
 
@@ -20,8 +21,8 @@ function initViewer() {
     return;
   }
 
-  // Only intercept if content-type is text/plain, text/csv, or text/markdown
-  const validContentTypes = ['text/plain', 'text/csv', 'text/markdown', ''];
+  // Only intercept if content-type is text/plain, text/csv, text/markdown, or application/json
+  const validContentTypes = ['text/plain', 'text/csv', 'text/markdown', 'application/json', ''];
   const isValidContentType = validContentTypes.some(type => contentType === type || contentType.startsWith(type));
 
   if (!isValidContentType) {
@@ -83,7 +84,10 @@ function initViewer() {
 
       // Store the file content, type, and original URL BEFORE writing HTML
       sessionStorage.setItem('fileContent', fileContent);
-      sessionStorage.setItem('fileType', isCsv ? 'csv' : 'markdown');
+      let fileType = 'markdown';
+      if (isCsv) fileType = 'csv';
+      else if (isJson) fileType = 'json';
+      sessionStorage.setItem('fileType', fileType);
       sessionStorage.setItem('fileUrl', url);
 
       document.open();

@@ -104,6 +104,9 @@ function loadFile() {
   if (fileType === 'csv') {
     document.title = fileName + ' - CSV Viewer';
     loadCsv(content);
+  } else if (fileType === 'json') {
+    document.title = fileName + ' - JSON Viewer';
+    loadJson(content);
   } else {
     document.title = fileName + ' - Markdown Viewer';
     loadMarkdown(content);
@@ -124,6 +127,66 @@ function loadMarkdown(content) {
     console.error('Markdown parsing error:', error);
     document.getElementById('content').innerHTML = `<p class="error">Error parsing markdown: ${error.message}</p>`;
   }
+}
+
+// Load and render JSON content
+function loadJson(content) {
+  try {
+    // Hide markdown and CSV content, show JSON container
+    document.getElementById('content').style.display = 'none';
+    document.getElementById('csvControls').style.display = 'none';
+    document.getElementById('csvContainer').style.display = 'none';
+    document.getElementById('jsonContainer').style.display = 'block';
+
+    // Parse and pretty-print JSON
+    const parsed = JSON.parse(content);
+    const formatted = JSON.stringify(parsed, null, 2);
+
+    // Display with syntax highlighting
+    const codeElement = document.getElementById('jsonContent');
+    codeElement.textContent = formatted;
+
+    // Apply syntax highlighting
+    if (typeof hljs !== 'undefined') {
+      hljs.highlightElement(codeElement);
+    }
+
+    // Add copy button for JSON
+    addJsonCopyButton();
+  } catch (error) {
+    console.error('JSON parsing error:', error);
+    document.getElementById('jsonContainer').innerHTML = `<p class="error">Error parsing JSON: ${error.message}</p>`;
+  }
+}
+
+// Add copy button to JSON viewer
+function addJsonCopyButton() {
+  const container = document.getElementById('jsonContainer');
+  const pre = container.querySelector('pre');
+
+  if (!pre) return;
+
+  const wrapper = document.createElement('div');
+  wrapper.className = 'code-block-wrapper';
+
+  const button = document.createElement('button');
+  button.className = 'copy-button';
+  button.textContent = 'Copy';
+  button.onclick = () => {
+    const content = document.getElementById('jsonContent').textContent;
+    navigator.clipboard.writeText(content).then(() => {
+      button.textContent = 'Copied!';
+      setTimeout(() => {
+        button.textContent = 'Copy';
+      }, 2000);
+    }).catch(err => {
+      console.error('Failed to copy:', err);
+    });
+  };
+
+  pre.parentNode.insertBefore(wrapper, pre);
+  wrapper.appendChild(pre);
+  wrapper.appendChild(button);
 }
 
 // Load and render CSV content
@@ -339,7 +402,9 @@ document.getElementById('downloadButton').addEventListener('click', () => {
   const fileName = decodeURIComponent(urlPath.split('/').pop());
 
   // Determine MIME type
-  const mimeType = fileType === 'csv' ? 'text/csv' : 'text/markdown';
+  let mimeType = 'text/markdown';
+  if (fileType === 'csv') mimeType = 'text/csv';
+  else if (fileType === 'json') mimeType = 'application/json';
 
   // Create blob and download
   const blob = new Blob([content], { type: mimeType });

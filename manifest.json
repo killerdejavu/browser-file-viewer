@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "File Viewer (Markdown & CSV)",
-  "version": "2.0.0",
-  "description": "View markdown and CSV files directly in Chrome with beautiful formatting",
+  "name": "Browser File Viewer (Markdown, CSV & JSON)",
+  "version": "2.1.0",
+  "description": "View markdown, CSV, and JSON files directly in Chrome with beautiful formatting",
   "permissions": [
     "declarativeNetRequest"
   ],
@@ -17,12 +17,15 @@
         "file://*/*.md",
         "file://*/*.markdown",
         "file://*/*.csv",
+        "file://*/*.json",
         "http://*/*.md",
         "http://*/*.markdown",
         "http://*/*.csv",
+        "http://*/*.json",
         "https://*/*.md",
         "https://*/*.markdown",
-        "https://*/*.csv"
+        "https://*/*.csv",
+        "https://*/*.json"
       ],
       "js": ["content.js"],
       "run_at": "document_start"

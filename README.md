@@ -1,6 +1,6 @@
-# File Viewer Chrome Extension (Markdown & CSV)
+# Browser File Viewer - Chrome Extension
 
-A Chrome extension that renders markdown and CSV files beautifully in your browser with GitHub-flavored styling.
+A Chrome extension that renders markdown, CSV, and JSON files beautifully in your browser with GitHub-flavored styling.
 
 ## Features
 
@@ -17,6 +17,13 @@ A Chrome extension that renders markdown and CSV files beautifully in your brows
 - Sticky headers for easy navigation
 - Alternating row colors for readability
 - Hover effects on rows
+
+### JSON Viewer
+- Pretty-printed JSON with proper indentation
+- **Syntax highlighting** for keys, values, and data types
+- **Copy button** to copy the entire JSON
+- Support for nested objects and arrays
+- Error handling for malformed JSON
 
 ### General Features
 - **Dark mode support** with OS-level default and manual toggle
@@ -47,37 +54,43 @@ A Chrome extension that renders markdown and CSV files beautifully in your brows
    cd browser-file-viewer
    ```
 
-2. **Load in Chrome**:
+2. **No build step required!**
+   - This is a pure client-side Chrome extension
+   - No TypeScript compilation, no bundlers, no minification
+   - Dependencies (marked.js, highlight.js) are loaded from CDN
+   - You can load the source files directly in Chrome
+
+3. **Load in Chrome**:
    - Open Chrome and go to `chrome://extensions/`
    - Enable "Developer mode" (top-right toggle)
    - Click "Load unpacked"
    - Select the cloned repository folder
 
-3. **Make changes**:
+4. **Make changes**:
    - Edit the source files (`viewer.js`, `styles.css`, `content.js`, etc.)
    - Click the refresh icon on the extension card in `chrome://extensions/` to reload changes
-   - Refresh any open `.md` or `.csv` files to see updates
-
-No build process required - this is a pure client-side extension!
+   - Refresh any open `.md`, `.csv`, or `.json` files to see updates
 
 ## Usage
 
 1. **Enable file access**: After installation, make sure to enable "Allow access to file URLs" for this extension:
    - Go to `chrome://extensions/`
-   - Find "File Viewer (Markdown & CSV)" extension
+   - Find "Browser File Viewer" extension
    - Click "Details"
    - Scroll down and enable "Allow access to file URLs"
    - You may be prompted to grant additional permissions for download interception
 
 2. **Open files**:
-   - **Local files**: Drag and drop `.md` or `.csv` files into Chrome, or use `File > Open File` (Cmd+O on Mac, Ctrl+O on Windows)
-   - **Web URLs**: Simply navigate to any URL ending in `.md`, `.markdown`, or `.csv`
+   - **Local files**: Drag and drop `.md`, `.csv`, or `.json` files into Chrome, or use `File > Open File` (Cmd+O on Mac, Ctrl+O on Windows)
+   - **Web URLs**: Simply navigate to any URL ending in `.md`, `.markdown`, `.csv`, or `.json`
 
 3. **View options**:
    - Click "Dark Mode" / "Light Mode" to switch between themes
    - Click "View Raw" to see the original file source
+   - Click "Download" to download the file
    - **For Markdown**: Code blocks have copy buttons for easy copying
    - **For CSV**: Use the search box to filter rows, toggle text wrapping
+   - **For JSON**: Copy button to copy the entire formatted JSON
    - Theme preference is saved and persists across sessions
 
 ## Examples
@@ -108,6 +121,24 @@ Bob Johnson,bob@example.com,35,Chicago" > test.csv
 
 Then open `test.csv` in Chrome!
 
+### Test JSON File
+
+```bash
+echo '{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "age": 30,
+  "address": {
+    "street": "123 Main St",
+    "city": "New York",
+    "zip": "10001"
+  },
+  "hobbies": ["reading", "coding", "hiking"]
+}' > test.json
+```
+
+Then open `test.json` in Chrome!
+
 ## Troubleshooting
 
 - **File not rendering**: Make sure you've enabled "Allow access to file URLs" in the extension settings
@@ -117,12 +148,14 @@ Then open `test.csv` in Chrome!
 ## File Structure
 
 ```
-markdown-viewer/
+browser-file-viewer/
 ├── manifest.json      # Extension configuration
-├── content.js         # Content script that intercepts .md and .csv files
+├── content.js         # Content script that intercepts .md, .csv, and .json files
 ├── viewer.html        # File viewer page template
-├── viewer.js          # Markdown and CSV rendering logic
-├── styles.css         # Styling for both markdown and CSV views
+├── viewer.js          # Markdown, CSV, and JSON rendering logic
+├── styles.css         # Styling for all file viewers
+├── background.js      # Service worker for declarative net requests
+├── rules.json         # Rules for CSV header handling
 └── README.md          # This file
 ```
 
@@ -130,6 +163,7 @@ markdown-viewer/
 
 - **Markdown**: `.md`, `.markdown`
 - **CSV**: `.csv`
+- **JSON**: `.json`
 
 ## Development
 
@@ -153,6 +187,7 @@ You can easily customize the appearance and behavior:
 
 - **Styling**: Edit `styles.css` to change colors, fonts, spacing, etc.
 - **Markdown rendering**: Modify `viewer.js` to adjust marked.js options or add custom renderers
+- **JSON formatting**: Adjust indentation levels or add collapsible sections in `viewer.js`
 - **Supported formats**: Add new file extensions in `manifest.json` under `content_scripts.matches`
 
 ## Contributing

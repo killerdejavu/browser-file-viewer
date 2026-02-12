@@ -1,7 +1,7 @@
 {
-  "name": "markdown-csv-viewer",
-  "version": "2.0.0",
-  "description": "Chrome extension for viewing markdown and CSV files with beautiful formatting",
+  "name": "browser-file-viewer",
+  "version": "2.1.0",
+  "description": "Chrome extension for viewing markdown, CSV, and JSON files with beautiful formatting",
   "repository": {
     "type": "git",
     "url": "https://github.com/killerdejavu/browser-file-viewer.git"
