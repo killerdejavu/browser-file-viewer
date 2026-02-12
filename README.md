@@ -23,6 +23,7 @@ A Chrome extension that renders markdown, CSV, and JSON files beautifully in you
 - **Syntax highlighting** for keys, values, and data types
 - **Copy button** to copy the entire JSON
 - Support for nested objects and arrays
+- **Works with API endpoints** - automatically detects JSON responses even without `.json` in URL
 - Error handling for malformed JSON
 
 ### General Features
@@ -83,6 +84,7 @@ A Chrome extension that renders markdown, CSV, and JSON files beautifully in you
 2. **Open files**:
    - **Local files**: Drag and drop `.md`, `.csv`, or `.json` files into Chrome, or use `File > Open File` (Cmd+O on Mac, Ctrl+O on Windows)
    - **Web URLs**: Simply navigate to any URL ending in `.md`, `.markdown`, `.csv`, or `.json`
+   - **API endpoints**: The extension automatically detects and formats JSON responses from APIs (even without `.json` in the URL)
 
 3. **View options**:
    - Click "Dark Mode" / "Light Mode" to switch between themes

@@ -7,13 +7,16 @@ function initViewer() {
   const isCsv = url.match(/\.csv$/i);
   const isJson = url.match(/\.json$/i);
 
-  if (!isMarkdown && !isCsv && !isJson) {
-    return;
-  }
-
   // CRITICAL: Check content-type first to avoid intercepting HTML pages
   // This prevents intercepting auth/login pages that have .csv/.md in the URL
   const contentType = document.contentType || '';
+
+  // For files without extensions, check if content-type is JSON
+  const isJsonContentType = contentType === 'application/json' || contentType.startsWith('application/json');
+
+  if (!isMarkdown && !isCsv && !isJson && !isJsonContentType) {
+    return;
+  }
 
   // Only proceed if content-type is NOT HTML
   // HTML pages (like auth/login) should be left alone
@@ -86,7 +89,7 @@ function initViewer() {
       sessionStorage.setItem('fileContent', fileContent);
       let fileType = 'markdown';
       if (isCsv) fileType = 'csv';
-      else if (isJson) fileType = 'json';
+      else if (isJson || isJsonContentType) fileType = 'json';
       sessionStorage.setItem('fileType', fileType);
       sessionStorage.setItem('fileUrl', url);
 
