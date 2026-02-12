@@ -494,30 +494,163 @@ body {
 
 /* JSON Viewer Styles */
 .json-container {
-  padding: 32px 24px;
-  max-width: 980px;
+  padding: 24px;
+  max-width: 100%;
   margin: 0;
 }
 
-.json-container pre {
-  padding: 20px;
+.json-controls {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding: 0 4px;
+}
+
+.json-control-btn {
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-primary);
+  background-color: var(--button-bg);
+  border: 1px solid var(--border-secondary);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.json-control-btn:hover {
+  background-color: var(--button-hover);
+}
+
+.json-tree-wrapper {
+  background-color: var(--pre-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 16px;
   overflow: auto;
+  max-height: calc(100vh - 200px);
+}
+
+.json-tree {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
   font-size: 14px;
   line-height: 1.6;
-  background-color: var(--pre-bg);
-  border-radius: 6px;
-  border: 1px solid var(--border-color);
-  margin: 0;
-}
-
-.json-container code {
-  display: block;
-  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
   color: var(--text-primary);
-  background: transparent;
-  padding: 0;
 }
 
-.json-container .code-block-wrapper {
-  margin: 0;
+.json-node {
+  position: relative;
+}
+
+.json-line {
+  display: flex;
+  align-items: baseline;
+  padding: 1px 0;
+  position: relative;
+}
+
+.json-line:hover {
+  background-color: var(--code-bg);
+  border-radius: 3px;
+}
+
+.json-toggle {
+  display: inline-block;
+  width: 16px;
+  cursor: pointer;
+  user-select: none;
+  color: var(--text-secondary);
+  font-size: 12px;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+  text-align: center;
+}
+
+.json-toggle:hover {
+  color: var(--text-primary);
+}
+
+.json-toggle-spacer {
+  display: inline-block;
+  width: 16px;
+  flex-shrink: 0;
+}
+
+.json-key {
+  color: #0969da;
+  margin-right: 4px;
+}
+
+[data-theme="dark"] .json-key {
+  color: #58a6ff;
+}
+
+.json-brace {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.json-count {
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-style: italic;
+  margin-left: 8px;
+  opacity: 0.7;
+}
+
+.json-value {
+  margin-left: 4px;
+}
+
+.json-string {
+  color: #0a3069;
+}
+
+[data-theme="dark"] .json-string {
+  color: #a5d6ff;
+}
+
+.json-number {
+  color: #0550ae;
+}
+
+[data-theme="dark"] .json-number {
+  color: #79c0ff;
+}
+
+.json-boolean {
+  color: #8250df;
+  font-weight: 600;
+}
+
+[data-theme="dark"] .json-boolean {
+  color: #d2a8ff;
+}
+
+.json-null {
+  color: #6e7781;
+  font-style: italic;
+}
+
+[data-theme="dark"] .json-null {
+  color: #8b949e;
+}
+
+.json-children {
+  margin-left: 20px;
+  border-left: 1px solid var(--border-color);
+  padding-left: 8px;
+}
+
+.json-close {
+  color: var(--text-secondary);
+}
+
+.json-node.collapsed > .json-children {
+  display: none;
+}
+
+.json-node.collapsed > .json-close {
+  display: none;
 }

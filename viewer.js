@@ -138,55 +138,289 @@ function loadJson(content) {
     document.getElementById('csvContainer').style.display = 'none';
     document.getElementById('jsonContainer').style.display = 'block';
 
-    // Parse and pretty-print JSON
+    // Parse JSON
     const parsed = JSON.parse(content);
-    const formatted = JSON.stringify(parsed, null, 2);
 
-    // Display with syntax highlighting
-    const codeElement = document.getElementById('jsonContent');
-    codeElement.textContent = formatted;
+    // Store original content for copy functionality
+    window.jsonOriginalContent = content;
 
-    // Apply syntax highlighting
-    if (typeof hljs !== 'undefined') {
-      hljs.highlightElement(codeElement);
-    }
+    // Create JSON tree viewer
+    const container = document.getElementById('jsonContainer');
+    container.innerHTML = '';
 
-    // Add copy button for JSON
-    addJsonCopyButton();
+    // Add controls
+    const controls = document.createElement('div');
+    controls.className = 'json-controls';
+    controls.innerHTML = `
+      <button id="jsonExpandAll" class="json-control-btn">Expand All</button>
+      <button id="jsonCollapseAll" class="json-control-btn">Collapse All</button>
+      <button id="jsonCopy" class="json-control-btn">Copy JSON</button>
+    `;
+    container.appendChild(controls);
+
+    // Create tree view
+    const treeWrapper = document.createElement('div');
+    treeWrapper.className = 'json-tree-wrapper';
+    const tree = document.createElement('div');
+    tree.className = 'json-tree';
+    tree.appendChild(renderJsonNode(parsed, '', true));
+    treeWrapper.appendChild(tree);
+    container.appendChild(treeWrapper);
+
+    // Add event listeners for controls
+    document.getElementById('jsonExpandAll').addEventListener('click', () => expandCollapseAll(true));
+    document.getElementById('jsonCollapseAll').addEventListener('click', () => expandCollapseAll(false));
+    document.getElementById('jsonCopy').addEventListener('click', copyJsonContent);
+
   } catch (error) {
     console.error('JSON parsing error:', error);
     document.getElementById('jsonContainer').innerHTML = `<p class="error">Error parsing JSON: ${error.message}</p>`;
   }
 }
 
-// Add copy button to JSON viewer
-function addJsonCopyButton() {
-  const container = document.getElementById('jsonContainer');
-  const pre = container.querySelector('pre');
+// Render a JSON node (recursive)
+function renderJsonNode(value, key, isRoot = false, isLast = false) {
+  const node = document.createElement('div');
+  node.className = 'json-node';
 
-  if (!pre) return;
+  const type = Array.isArray(value) ? 'array' : typeof value;
 
-  const wrapper = document.createElement('div');
-  wrapper.className = 'code-block-wrapper';
+  if (type === 'object' && value !== null) {
+    // Object
+    const keys = Object.keys(value);
+    const isEmpty = keys.length === 0;
 
-  const button = document.createElement('button');
-  button.className = 'copy-button';
-  button.textContent = 'Copy';
-  button.onclick = () => {
-    const content = document.getElementById('jsonContent').textContent;
-    navigator.clipboard.writeText(content).then(() => {
-      button.textContent = 'Copied!';
-      setTimeout(() => {
-        button.textContent = 'Copy';
-      }, 2000);
-    }).catch(err => {
-      console.error('Failed to copy:', err);
-    });
-  };
+    const line = document.createElement('div');
+    line.className = 'json-line';
 
-  pre.parentNode.insertBefore(wrapper, pre);
-  wrapper.appendChild(pre);
-  wrapper.appendChild(button);
+    if (!isEmpty) {
+      const toggle = document.createElement('span');
+      toggle.className = 'json-toggle';
+      toggle.textContent = '▼';
+      toggle.onclick = (e) => {
+        e.stopPropagation();
+        toggleNode(node);
+      };
+      line.appendChild(toggle);
+    } else {
+      const spacer = document.createElement('span');
+      spacer.className = 'json-toggle-spacer';
+      line.appendChild(spacer);
+    }
+
+    if (key) {
+      const keySpan = document.createElement('span');
+      keySpan.className = 'json-key';
+      keySpan.textContent = `"${key}"`;
+      line.appendChild(keySpan);
+      line.appendChild(document.createTextNode(': '));
+    }
+
+    const brace = document.createElement('span');
+    brace.className = 'json-brace';
+    brace.textContent = isEmpty ? '{}' : '{';
+    line.appendChild(brace);
+
+    if (!isEmpty) {
+      const count = document.createElement('span');
+      count.className = 'json-count';
+      count.textContent = ` // ${keys.length} ${keys.length === 1 ? 'key' : 'keys'}`;
+      line.appendChild(count);
+    }
+
+    node.appendChild(line);
+
+    if (!isEmpty) {
+      const children = document.createElement('div');
+      children.className = 'json-children';
+
+      keys.forEach((k, index) => {
+        children.appendChild(renderJsonNode(value[k], k, false, index === keys.length - 1));
+      });
+
+      node.appendChild(children);
+
+      const closeLine = document.createElement('div');
+      closeLine.className = 'json-line json-close';
+      const closeSpacer = document.createElement('span');
+      closeSpacer.className = 'json-toggle-spacer';
+      closeLine.appendChild(closeSpacer);
+      const closeBrace = document.createElement('span');
+      closeBrace.className = 'json-brace';
+      closeBrace.textContent = '}';
+      closeLine.appendChild(closeBrace);
+      node.appendChild(closeLine);
+    }
+
+  } else if (type === 'array') {
+    // Array
+    const isEmpty = value.length === 0;
+
+    const line = document.createElement('div');
+    line.className = 'json-line';
+
+    if (!isEmpty) {
+      const toggle = document.createElement('span');
+      toggle.className = 'json-toggle';
+      toggle.textContent = '▼';
+      toggle.onclick = (e) => {
+        e.stopPropagation();
+        toggleNode(node);
+      };
+      line.appendChild(toggle);
+    } else {
+      const spacer = document.createElement('span');
+      spacer.className = 'json-toggle-spacer';
+      line.appendChild(spacer);
+    }
+
+    if (key) {
+      const keySpan = document.createElement('span');
+      keySpan.className = 'json-key';
+      keySpan.textContent = `"${key}"`;
+      line.appendChild(keySpan);
+      line.appendChild(document.createTextNode(': '));
+    }
+
+    const bracket = document.createElement('span');
+    bracket.className = 'json-brace';
+    bracket.textContent = isEmpty ? '[]' : '[';
+    line.appendChild(bracket);
+
+    if (!isEmpty) {
+      const count = document.createElement('span');
+      count.className = 'json-count';
+      count.textContent = ` // ${value.length} ${value.length === 1 ? 'item' : 'items'}`;
+      line.appendChild(count);
+    }
+
+    node.appendChild(line);
+
+    if (!isEmpty) {
+      const children = document.createElement('div');
+      children.className = 'json-children';
+
+      value.forEach((item, index) => {
+        children.appendChild(renderJsonNode(item, '', false, index === value.length - 1));
+      });
+
+      node.appendChild(children);
+
+      const closeLine = document.createElement('div');
+      closeLine.className = 'json-line json-close';
+      const closeSpacer = document.createElement('span');
+      closeSpacer.className = 'json-toggle-spacer';
+      closeLine.appendChild(closeSpacer);
+      const closeBracket = document.createElement('span');
+      closeBracket.className = 'json-brace';
+      closeBracket.textContent = ']';
+      closeLine.appendChild(closeBracket);
+      node.appendChild(closeLine);
+    }
+
+  } else {
+    // Primitive value
+    const line = document.createElement('div');
+    line.className = 'json-line json-primitive';
+
+    const spacer = document.createElement('span');
+    spacer.className = 'json-toggle-spacer';
+    line.appendChild(spacer);
+
+    if (key) {
+      const keySpan = document.createElement('span');
+      keySpan.className = 'json-key';
+      keySpan.textContent = `"${key}"`;
+      line.appendChild(keySpan);
+      line.appendChild(document.createTextNode(': '));
+    }
+
+    const valueSpan = document.createElement('span');
+    valueSpan.className = `json-value json-${type}`;
+
+    if (type === 'string') {
+      valueSpan.textContent = `"${value}"`;
+    } else if (type === 'number') {
+      valueSpan.textContent = value;
+    } else if (type === 'boolean') {
+      valueSpan.textContent = value;
+    } else if (value === null) {
+      valueSpan.className = 'json-value json-null';
+      valueSpan.textContent = 'null';
+    }
+
+    line.appendChild(valueSpan);
+    node.appendChild(line);
+  }
+
+  return node;
+}
+
+// Toggle expand/collapse for a node
+function toggleNode(node) {
+  const toggle = node.querySelector('.json-toggle');
+  const children = node.querySelector('.json-children');
+  const closeLine = node.querySelector('.json-close');
+
+  if (!toggle || !children) return;
+
+  const isExpanded = toggle.textContent === '▼';
+
+  if (isExpanded) {
+    toggle.textContent = '▶';
+    children.style.display = 'none';
+    if (closeLine) closeLine.style.display = 'none';
+    node.classList.add('collapsed');
+  } else {
+    toggle.textContent = '▼';
+    children.style.display = 'block';
+    if (closeLine) closeLine.style.display = 'block';
+    node.classList.remove('collapsed');
+  }
+}
+
+// Expand or collapse all nodes
+function expandCollapseAll(expand) {
+  const allToggles = document.querySelectorAll('.json-toggle');
+
+  allToggles.forEach(toggle => {
+    const node = toggle.closest('.json-node');
+    const children = node.querySelector('.json-children');
+    const closeLine = node.querySelector('.json-close');
+
+    if (!children) return;
+
+    if (expand) {
+      toggle.textContent = '▼';
+      children.style.display = 'block';
+      if (closeLine) closeLine.style.display = 'block';
+      node.classList.remove('collapsed');
+    } else {
+      toggle.textContent = '▶';
+      children.style.display = 'none';
+      if (closeLine) closeLine.style.display = 'none';
+      node.classList.add('collapsed');
+    }
+  });
+}
+
+// Copy JSON content
+function copyJsonContent() {
+  const content = window.jsonOriginalContent || '';
+  const button = document.getElementById('jsonCopy');
+
+  navigator.clipboard.writeText(content).then(() => {
+    button.textContent = 'Copied!';
+    setTimeout(() => {
+      button.textContent = 'Copy JSON';
+    }, 2000);
+  }).catch(err => {
+    console.error('Failed to copy:', err);
+    button.textContent = 'Error';
+    setTimeout(() => {
+      button.textContent = 'Copy JSON';
+    }, 2000);
+  });
 }
 
 // Load and render CSV content

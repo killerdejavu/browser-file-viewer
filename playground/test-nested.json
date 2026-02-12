@@ -1,0 +1,49 @@
+{
+  "name": "Browser File Viewer",
+  "version": "2.2.0",
+  "description": "A Chrome extension for viewing files",
+  "features": {
+    "markdown": {
+      "enabled": true,
+      "options": {
+        "githubFlavored": true,
+        "syntaxHighlighting": true,
+        "themes": ["light", "dark"]
+      }
+    },
+    "csv": {
+      "enabled": true,
+      "options": {
+        "search": true,
+        "sort": true,
+        "export": false
+      }
+    },
+    "json": {
+      "enabled": true,
+      "options": {
+        "collapsible": true,
+        "syntaxHighlighting": true,
+        "copyButton": true
+      }
+    }
+  },
+  "authors": [
+    {
+      "name": "killerdejavu",
+      "github": "https://github.com/killerdejavu",
+      "role": "maintainer"
+    }
+  ],
+  "stats": {
+    "downloads": 1000,
+    "stars": 50,
+    "issues": {
+      "open": 2,
+      "closed": 15
+    }
+  },
+  "tags": ["chrome", "extension", "markdown", "csv", "json", "viewer"],
+  "license": "MIT",
+  "repository": "https://github.com/killerdejavu/browser-file-viewer"
+}
