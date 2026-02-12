@@ -43,8 +43,8 @@ A Chrome extension that renders markdown and CSV files beautifully in your brows
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/yourusername/markdown-viewer.git
-   cd markdown-viewer
+   git clone https://github.com/killerdejavu/browser-file-viewer.git
+   cd browser-file-viewer
    ```
 
 2. **Load in Chrome**:
