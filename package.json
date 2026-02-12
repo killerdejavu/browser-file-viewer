@@ -1,0 +1,18 @@
+{
+  "name": "markdown-csv-viewer",
+  "version": "2.0.0",
+  "description": "Chrome extension for viewing markdown and CSV files with beautiful formatting",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/markdown-viewer.git"
+  },
+  "keywords": [
+    "chrome-extension",
+    "markdown",
+    "csv",
+    "viewer",
+    "dark-mode"
+  ],
+  "author": "",
+  "license": "MIT"
+}

@@ -1,0 +1,49 @@
+{
+  "manifest_version": 3,
+  "name": "File Viewer (Markdown & CSV)",
+  "version": "2.0.0",
+  "description": "View markdown and CSV files directly in Chrome with beautiful formatting",
+  "permissions": [
+    "declarativeNetRequest"
+  ],
+  "host_permissions": [
+    "file:///*",
+    "http://*/*",
+    "https://*/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "file://*/*.md",
+        "file://*/*.markdown",
+        "file://*/*.csv",
+        "http://*/*.md",
+        "http://*/*.markdown",
+        "http://*/*.csv",
+        "https://*/*.md",
+        "https://*/*.markdown",
+        "https://*/*.csv"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["viewer.html", "viewer.js", "styles.css"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "csv_headers",
+        "enabled": true,
+        "path": "rules.json"
+      }
+    ]
+  }
+}

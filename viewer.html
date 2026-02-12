@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Markdown Viewer</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="header">
+    <div class="container">
+      <div class="header-content">
+        <span class="file-path" id="filePath"></span>
+        <div class="header-buttons">
+          <button id="themeToggle" class="btn">Dark Mode</button>
+          <button id="downloadButton" class="btn">Download</button>
+          <button id="rawButton" class="btn">View Raw</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="csv-controls" id="csvControls" style="display: none;">
+    <div class="container">
+      <div class="controls-content">
+        <input type="text" id="searchInput" class="search-input" placeholder="Search in table...">
+        <label class="checkbox-label">
+          <input type="checkbox" id="wrapText" checked>
+          Wrap text
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <article id="content" class="markdown-body">
+      <div class="loading">Loading file...</div>
+    </article>
+  </div>
+
+  <div class="csv-container" id="csvContainer" style="display: none;">
+    <div class="table-wrapper">
+      <table id="csvTable" class="csv-table"></table>
+    </div>
+  </div>
+
+  <!-- Markdown parser -->
+  <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js"></script>
+
+  <!-- Syntax highlighting - using full bundle to avoid module errors -->
+  <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github.min.css" id="hljs-light">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css" id="hljs-dark" disabled>
+
+  <script src="viewer.js"></script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "priority": 1,
+    "action": {
+      "type": "modifyHeaders",
+      "responseHeaders": [
+        {
+          "header": "content-type",
+          "operation": "set",
+          "value": "text/plain"
+        }
+      ]
+    },
+    "condition": {
+      "urlFilter": "*.csv",
+      "resourceTypes": ["main_frame"]
+    }
+  },
+  {
+    "id": 2,
+    "priority": 1,
+    "action": {
+      "type": "modifyHeaders",
+      "responseHeaders": [
+        {
+          "header": "content-disposition",
+          "operation": "set",
+          "value": "inline"
+        }
+      ]
+    },
+    "condition": {
+      "urlFilter": "*.csv",
+      "resourceTypes": ["main_frame"]
+    }
+  }
+]
