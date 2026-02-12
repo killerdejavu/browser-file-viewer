@@ -591,6 +591,11 @@ body {
   font-weight: 600;
 }
 
+.json-preview {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
 .json-count {
   color: var(--text-secondary);
   font-size: 12px;

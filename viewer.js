@@ -217,11 +217,18 @@ function renderJsonNode(value, key, isRoot = false, isLast = false) {
     }
 
     const brace = document.createElement('span');
-    brace.className = 'json-brace';
+    brace.className = 'json-brace json-open-brace';
     brace.textContent = isEmpty ? '{}' : '{';
     line.appendChild(brace);
 
     if (!isEmpty) {
+      // Add collapsed preview (hidden by default, shown when collapsed)
+      const preview = document.createElement('span');
+      preview.className = 'json-preview';
+      preview.style.display = 'none';
+      preview.textContent = '...}';
+      line.appendChild(preview);
+
       const count = document.createElement('span');
       count.className = 'json-count';
       count.textContent = ` // ${keys.length} ${keys.length === 1 ? 'key' : 'keys'}`;
@@ -283,11 +290,18 @@ function renderJsonNode(value, key, isRoot = false, isLast = false) {
     }
 
     const bracket = document.createElement('span');
-    bracket.className = 'json-brace';
+    bracket.className = 'json-brace json-open-brace';
     bracket.textContent = isEmpty ? '[]' : '[';
     line.appendChild(bracket);
 
     if (!isEmpty) {
+      // Add collapsed preview (hidden by default, shown when collapsed)
+      const preview = document.createElement('span');
+      preview.className = 'json-preview';
+      preview.style.display = 'none';
+      preview.textContent = '...]';
+      line.appendChild(preview);
+
       const count = document.createElement('span');
       count.className = 'json-count';
       count.textContent = ` // ${value.length} ${value.length === 1 ? 'item' : 'items'}`;
@@ -361,20 +375,28 @@ function toggleNode(node) {
   const toggle = node.querySelector('.json-toggle');
   const children = node.querySelector('.json-children');
   const closeLine = node.querySelector('.json-close');
+  const openBrace = node.querySelector('.json-open-brace');
+  const preview = node.querySelector('.json-preview');
 
   if (!toggle || !children) return;
 
   const isExpanded = toggle.textContent === '▼';
 
   if (isExpanded) {
+    // Collapse
     toggle.textContent = '▶';
     children.style.display = 'none';
     if (closeLine) closeLine.style.display = 'none';
+    if (openBrace) openBrace.style.display = 'none';
+    if (preview) preview.style.display = 'inline';
     node.classList.add('collapsed');
   } else {
+    // Expand
     toggle.textContent = '▼';
     children.style.display = 'block';
     if (closeLine) closeLine.style.display = 'block';
+    if (openBrace) openBrace.style.display = 'inline';
+    if (preview) preview.style.display = 'none';
     node.classList.remove('collapsed');
   }
 }
@@ -387,18 +409,26 @@ function expandCollapseAll(expand) {
     const node = toggle.closest('.json-node');
     const children = node.querySelector('.json-children');
     const closeLine = node.querySelector('.json-close');
+    const openBrace = node.querySelector('.json-open-brace');
+    const preview = node.querySelector('.json-preview');
 
     if (!children) return;
 
     if (expand) {
+      // Expand
       toggle.textContent = '▼';
       children.style.display = 'block';
       if (closeLine) closeLine.style.display = 'block';
+      if (openBrace) openBrace.style.display = 'inline';
+      if (preview) preview.style.display = 'none';
       node.classList.remove('collapsed');
     } else {
+      // Collapse
       toggle.textContent = '▶';
       children.style.display = 'none';
       if (closeLine) closeLine.style.display = 'none';
+      if (openBrace) openBrace.style.display = 'none';
+      if (preview) preview.style.display = 'inline';
       node.classList.add('collapsed');
     }
   });
