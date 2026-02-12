@@ -226,7 +226,7 @@ function renderJsonNode(value, key, isRoot = false, isLast = false) {
       const preview = document.createElement('span');
       preview.className = 'json-preview';
       preview.style.display = 'none';
-      preview.textContent = '...}';
+      preview.textContent = '{...}';
       line.appendChild(preview);
 
       const count = document.createElement('span');
@@ -299,7 +299,7 @@ function renderJsonNode(value, key, isRoot = false, isLast = false) {
       const preview = document.createElement('span');
       preview.className = 'json-preview';
       preview.style.display = 'none';
-      preview.textContent = '...]';
+      preview.textContent = '[...]';
       line.appendChild(preview);
 
       const count = document.createElement('span');
